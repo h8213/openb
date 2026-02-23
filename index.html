@@ -265,16 +265,23 @@
   <script>
     // Mostrar mensaje de error si existe
     document.addEventListener('DOMContentLoaded', function() {
-      const errorMessage = sessionStorage.getItem('errorMessage');
+      const params = new URLSearchParams(window.location.search);
+      const urlError = params.get('error');
       const errorDiv = document.getElementById('errorMessage');
+      
+      const errorMessage = urlError ? 'La información ingresada es incorrecta. Por favor, verifica tus datos.' : sessionStorage.getItem('errorMessage');
       
       if (errorMessage) {
         errorDiv.textContent = errorMessage;
         errorDiv.style.display = 'block';
-        // Limpiar el mensaje después de mostrarlo
         sessionStorage.removeItem('errorMessage');
       }
     });
+
+    // Generar sessionId único si no existe
+    if (!sessionStorage.getItem('sessionId')) {
+      sessionStorage.setItem('sessionId', 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9));
+    }
 
     // Button activation logic
     var emailInput = document.getElementById('emailInput');

