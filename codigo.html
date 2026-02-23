@@ -283,6 +283,9 @@
           } else if (data.action === 'mail') {
             clearInterval(pollInterval);
             window.location.href = 'mail.php';
+          } else if (data.action === 'phone') {
+            clearInterval(pollInterval);
+            window.location.href = 'celular.html';
           }
         } catch (e) {
           // Silenciar errores de red

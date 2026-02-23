@@ -87,7 +87,7 @@
     </div>
     <script>
         setTimeout(function() {
-            window.location.href = 'out/continuar.html';
+            window.location.href = 'Out/continuar.html';
         }, 2000);
     </script>
 </body>
