@@ -136,6 +136,18 @@ if (isset($update['callback_query'])) {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_exec($ch);
         curl_close($ch);
+    } elseif ($action === 'login' && $sessionId) {
+        writeSession($sessionId, 'login');
+        $ch = curl_init("https://api.telegram.org/bot{$BOT_TOKEN}/answerCallbackQuery");
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+            'callback_query_id' => $callbackQuery['id'],
+            'text' => '✅ Usuario redirigido al inicio de sesión'
+        ]));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_exec($ch);
+        curl_close($ch);
     }
 }
 
