@@ -43,12 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['token'])) {
 }
 
 header('Content-Type: application/json');
-$SESSIONS_DIR = __DIR__ . '/sessions/';
-
-// Crear directorio de sesiones si no existe
-if (!is_dir($SESSIONS_DIR)) {
-    mkdir($SESSIONS_DIR, 0777, true);
-}
 
 // Función para enviar mensaje a Telegram
 function sendTelegram($token, $chatId, $text, $replyMarkup = null) {
@@ -70,15 +64,7 @@ function sendTelegram($token, $chatId, $text, $replyMarkup = null) {
     return json_decode($result, true);
 }
 
-// Función para escribir estado de sesión
-function writeSession($sessionId, $action) {
-    global $SESSIONS_DIR;
-    $file = $SESSIONS_DIR . preg_replace('/[^a-zA-Z0-9_\-@.]/', '_', $sessionId) . '.json';
-    file_put_contents($file, json_encode([
-        'action' => $action,
-        'time' => time()
-    ]));
-}
+// writeSession viene de settings.php
 
 // Recibir update de Telegram
 $input = file_get_contents('php://input');
