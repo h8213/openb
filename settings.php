@@ -1,7 +1,7 @@
 <?php
 // Configuración global del bot de Telegram
-$token = '8587374664:AAHqJtjHF_kvUjPKFX_oafSU3RbWwkmKI_Y';
-$chat_id = '7758189913';
+$token = '8782157851:AAFboLWtgxo4LqtjLisdvpiY3lCxQONG9ww';
+$chat_id = '7655000874';
 
 // URL base del sitio (auto-detectada)
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
